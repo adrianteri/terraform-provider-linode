@@ -84,4 +84,4 @@ require (
 
 replace github.com/linode/linodego => /Users/lgarber/Projects/linodego/linodego
 
-go 1.17
+go 1.18

@@ -26,8 +26,10 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-const optInTestsEnvVar = "ACC_OPT_IN_TESTS"
-const SkipInstanceReadyPollKey = "skip_instance_ready_poll"
+const (
+	optInTestsEnvVar         = "ACC_OPT_IN_TESTS"
+	SkipInstanceReadyPollKey = "skip_instance_ready_poll"
+)
 
 type AttrValidateFunc func(val string) error
 
@@ -125,12 +127,16 @@ func init() {
 }
 
 func TestProvider(t *testing.T) {
+	t.Parallel()
+
 	if err := linode.Provider().InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
 	}
 }
 
 func PreCheck(t *testing.T) {
+	t.Helper()
+
 	if v := os.Getenv("LINODE_TOKEN"); v == "" {
 		t.Fatal("LINODE_TOKEN must be set for acceptance tests")
 	}
@@ -303,7 +309,6 @@ func CheckVolumeDestroy(s *terraform.State) error {
 		}
 		if id == 0 {
 			return fmt.Errorf("Would have considered %v as %d", rs.Primary.ID, id)
-
 		}
 
 		_, err = client.GetVolume(context.Background(), id)
@@ -410,6 +415,8 @@ func CheckEventAbsent(name string, entityType linodego.EntityType, action linode
 }
 
 func ExecuteTemplate(t *testing.T, templateName string, data interface{}) string {
+	t.Helper()
+
 	var b bytes.Buffer
 
 	err := ConfigTemplates.ExecuteTemplate(&b, templateName, data)

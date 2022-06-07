@@ -14,5 +14,5 @@ type TemplateData struct {
 
 func DataBasic(t *testing.T, data TemplateData) string {
 	return acceptance.ExecuteTemplate(t,
-		"database_mysql_backups_data_basic", data)
+		"database_backups_data_basic", data)
 }

@@ -88,7 +88,8 @@ func deleteResource(ctx context.Context, d *schema.ResourceData, meta interface{
 }
 
 func updateAllowList(ctx context.Context, d *schema.ResourceData,
-	client linodego.Client, dbID int, allowList []string) error {
+	client linodego.Client, dbID int, allowList []string,
+) error {
 	db, err := client.GetMySQLDatabase(ctx, dbID)
 	if err != nil {
 		return err
@@ -115,10 +116,17 @@ var updateDBAllowListEngineMap = map[string]func(context.Context, linodego.Clien
 		})
 		return err
 	},
+	"mongodb": func(ctx context.Context, client linodego.Client, engine string, id int, allowList []string) error {
+		_, err := client.UpdateMongoDatabase(ctx, id, linodego.MongoUpdateOptions{
+			AllowList: allowList,
+		})
+		return err
+	},
 }
 
 func updateDBAllowListByEngine(ctx context.Context, client linodego.Client,
-	engine string, id int, allowList []string) error {
+	engine string, id int, allowList []string,
+) error {
 	// Future-proofing for more DB types
 	f, ok := updateDBAllowListEngineMap[engine]
 	if !ok {
