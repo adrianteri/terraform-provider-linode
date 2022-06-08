@@ -67,13 +67,13 @@ func TestAccDataSourceMySQLBackups_basic(t *testing.T) {
 					}
 
 					err := client.WaitForDatabaseStatus(context.Background(), db.ID,
-						linodego.DatabaseEngineTypeMongo, linodego.DatabaseStatusBackingUp, 120)
+						linodego.DatabaseEngineTypeMySQL, linodego.DatabaseStatusBackingUp, 120)
 					if err != nil {
 						t.Fatalf("failed to wait for database backing_up: %s", err)
 					}
 
 					err = client.WaitForDatabaseStatus(context.Background(), db.ID,
-						linodego.DatabaseEngineTypeMongo, linodego.DatabaseStatusActive, 1200)
+						linodego.DatabaseEngineTypeMySQL, linodego.DatabaseStatusActive, 1200)
 					if err != nil {
 						t.Fatalf("failed to wait for database active: %s", err)
 					}
